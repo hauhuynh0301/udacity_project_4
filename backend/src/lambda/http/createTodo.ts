@@ -4,7 +4,7 @@ import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 import { getUserId } from '../utils';
-import { createTodo } from '../../helpers/todos'
+import { createTodo } from '../../businessLogic/todos'
 import { TodoItem } from '../../models/TodoItem'
 
 export const handler = middy(
@@ -14,14 +14,7 @@ export const handler = middy(
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     };
-    if(!newTodo.name||newTodo.name.trim()==""){
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error : `Todo name is required`
-        })
-      }
-    }
+
     try {
       const userId: string = getUserId(event)
       const todoItem: TodoItem = await createTodo(userId, newTodo)
